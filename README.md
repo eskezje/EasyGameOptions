@@ -1,19 +1,47 @@
-# EasyGameOptions
+## EasyGameOptions
 
-![image](https://github.com/eskezje/EasyGameOptions/assets/114604325/0391f623-7f3c-42d9-87b0-fecf663e7765)
+EasyGameOptions is a utility script designed to streamline the optimization process for gaming on Windows systems. It allows users to easily apply various performance tweaks such as setting CPU affinity, enabling Full-Screen Exclusive (FSE), and configuring Differentiated Services Code Point (DSCP) settings. Additionally, it provides the option to revert these changes if needed.
 
-EasyGameOptions is a versatile utility designed to streamline your gaming experience on Windows. With just a few clicks, it optimizes your game's performance and settings for smoother gameplay. Here's what it offers:
+### Features
 
-CPU Affinity Management: The program intelligently selects CPU affinities, excluding the first core (core 0), to enhance game performance.
+- **High Priority Registry Setting**: Adds high priority to the Windows Registry for specified game executables.
+- **Full-Screen Exclusive (FSE) Support**: Enables FSE mode for enhanced gaming experience.
+- **DSCP Settings Configuration**: Allows users to configure DSCP settings for improved Quality of Service (QoS).
+- **Revert Functionality**: Provides the ability to revert applied changes effortlessly.
 
-High Priority Script Generation: It creates a script for your chosen game executable with elevated priority settings, ensuring that your game gets the attention it deserves from your system resources.
+### Requirements
 
-Full-Screen Exclusive (FSE) Support: EasyGameOptions enables Full-Screen Exclusive (FSE) mode for your game executable, enhancing graphics rendering and overall gaming experience.
+- Windows operating system.
+- Python 3 installed.
+- Tkinter library (usually included with Python installations on Windows).
 
-DSCP (Differentiated Services Code Point) Integration: It facilitates the integration of DSCP settings into your game executable, prioritizing network traffic for smoother online gaming sessions.
+### Usage
 
-Moreover, EasyGameOptions simplifies the management of these settings with its intuitive interface. You can easily revert high priority and FSE configurations with just a single click, providing flexibility and ease of use.
+1. **Run as Administrator**: The script must be executed with administrative privileges to make changes to the system.
+2. **Select Game Executable**: Click on the "Explore" button to select the game executable file.
+3. **Customize Options**:
+   - **High Priority**: Check the box to add high priority to the game executable.
+   - **FSE**: Check the box to enable Full-Screen Exclusive mode.
+   - **DSCP**: Check the box to configure DSCP settings.
+4. **Apply Changes**: Click the "Explore" button to apply the selected options.
+5. **Revert Changes**: Use the "Revert" buttons to revert specific changes or all changes made by the script.
 
-Enhance your gaming sessions effortlessly with EasyGameOptions – your ultimate gaming companion.
+### How to Run
 
-Got the idea from some of Amit's and imribiy's scripts
+1. Clone the repository or download the script file.
+2. Open Command Prompt or PowerShell with administrative privileges.
+3. Navigate to the directory containing the script.
+4. Run the script using the command: `python easy_game_options.py`.
+
+### Disclaimer
+
+- This script modifies system settings and registry entries. Use it at your own risk.
+- Always ensure you have backups or restore points before making changes to system configurations.
+
+### Contributing
+
+Contributions to enhance EasyGameOptions are welcome! Feel free to submit issues or pull requests.
+
+### License
+
+This project is licensed under the GNU General Public License v3.0 - see the [LICENSE](LICENSE) file for details.
