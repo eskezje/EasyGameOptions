@@ -2,6 +2,8 @@
 
 OBS. Needs to run with administrator privileges to edit the regsistry and DSCP.
 
+![image](https://github.com/eskezje/EasyGameOptions/assets/114604325/42f587e1-ac1c-4863-a31c-07c30adbf32b)
+
 EasyGameOptions is a versatile utility designed to streamline your gaming experience on Windows. With just a few clicks, it optimizes your game's performance and settings for smoother gameplay. Here's what it offers:
 
 CPU Affinity Management: The program intelligently selects CPU affinities, excluding the first core (core 0), to enhance game performance.
@@ -15,3 +17,4 @@ DSCP (Differentiated Services Code Point) Integration: It facilitates the integr
 Moreover, EasyGameOptions simplifies the management of these settings with its intuitive interface. You can easily revert high priority and FSE configurations with just a single click, providing flexibility and ease of use.
 
 Enhance your gaming sessions effortlessly with EasyGameOptions – your ultimate gaming companion.
+
