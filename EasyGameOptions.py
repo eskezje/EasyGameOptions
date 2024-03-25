@@ -139,6 +139,31 @@ def revert_FSE():
     subprocess.run(["reg", "delete", r"HKCU\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers", "/v", registry_key, "/f"], shell=True, check=True)
     messagebox.showinfo("Success", "FSE reverted for %s" % game_exe)
 
+def revert_DSCP(game_path):
+    if not game_path:
+        messagebox.showwarning("Warning", "No file selected.")
+        return
+    # Extracting directory and filename from the game path
+    game_dir, game_exe = os.path.split(game_path)
+    game_name, _ = os.path.splitext(os.path.basename(game_exe))  # Extracting just the executable name from the full path
+    
+    # Construct the registry key string with backslashes and without quotation marks
+    registry_key = os.path.join("HKEY_LOCAL_MACHINE", "Software", "Policies", "Microsoft", "Windows", "QoS", game_exe)
+
+    # Delete the registry key for DSCP settings
+    try:
+        subprocess.run(["reg", "delete", registry_key, "/f"], shell=True, check=True)
+        # Remove the NetQoSPolicy
+        subprocess.run(["powershell", "Remove-NetQosPolicy", "-Name", game_exe], check=True)
+        messagebox.showinfo("Success", "DSCP settings reverted for %s" % game_name)
+    except subprocess.CalledProcessError:
+        messagebox.showerror("Error", "Failed to revert DSCP settings. Registry does not exist or policy not found.")
+
+# Function to revert only DSCP settings
+def revert_DSCP_only():
+    game_path = select_game_file()
+    revert_DSCP(game_path)
+
 def revert():
     game_path = select_game_file()
     if not game_path:
@@ -209,6 +234,10 @@ dscp_frame.pack(pady=10)
 # Create and position the checkbox for enabling DSCP
 dscp_checkbutton = Checkbutton(dscp_frame, text="Yes", variable=enable_DSCP_var)
 dscp_checkbutton.pack(side="left")
+
+# Create and position the revert button for reverting only DSCP changes made by the script
+revert_DSCP_button = Button(root, text="Revert DSCP", command=revert_DSCP_only)
+revert_DSCP_button.pack()
 
 # Modify Tkinter window setup to call on_closing function when closing
 root.protocol("WM_DELETE_WINDOW", on_closing)
