@@ -13,3 +13,5 @@ DSCP (Differentiated Services Code Point) Integration: It facilitates the integr
 Moreover, EasyGameOptions simplifies the management of these settings with its intuitive interface. You can easily revert high priority and FSE configurations with just a single click, providing flexibility and ease of use.
 
 Enhance your gaming sessions effortlessly with EasyGameOptions – your ultimate gaming companion.
+
+OBS. Needs to run with administrator privileges to edit the regsistry and DSCP.
