@@ -2,6 +2,17 @@ import subprocess
 import os
 from tkinter import Tk, filedialog, Label, Button, Checkbutton, IntVar, messagebox
 import tkinter.ttk as ttk
+import ctypes
+import sys
+
+def run_as_admin():
+    if ctypes.windll.shell32.IsUserAnAdmin() == 0:
+        # If not running as admin, relaunch the script with admin privileges
+        ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, " ".join(sys.argv), None, 1)
+        sys.exit()
+
+# Call this function at the beginning of your script
+run_as_admin()
 
 # Global variable to store subprocesses
 sub_processes = []
