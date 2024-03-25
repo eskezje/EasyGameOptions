@@ -18,3 +18,4 @@ Moreover, EasyGameOptions simplifies the management of these settings with its i
 
 Enhance your gaming sessions effortlessly with EasyGameOptions – your ultimate gaming companion.
 
+Got the idea from some of Amit's and imribiy's scripts
