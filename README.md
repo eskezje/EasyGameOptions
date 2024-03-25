@@ -1,7 +1,5 @@
 # EasyGameOptions
 
-OBS. Needs to run with administrator privileges to edit the regsistry and DSCP.
-
 ![image](https://github.com/eskezje/EasyGameOptions/assets/114604325/0391f623-7f3c-42d9-87b0-fecf663e7765)
 
 EasyGameOptions is a versatile utility designed to streamline your gaming experience on Windows. With just a few clicks, it optimizes your game's performance and settings for smoother gameplay. Here's what it offers:
