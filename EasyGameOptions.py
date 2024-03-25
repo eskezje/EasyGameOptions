@@ -4,6 +4,7 @@ from tkinter import Tk, filedialog, Label, Button, Checkbutton, IntVar, messageb
 import tkinter.ttk as ttk
 import ctypes
 import sys
+import winreg
 
 def run_as_admin():
     if ctypes.windll.shell32.IsUserAnAdmin() == 0:
@@ -31,61 +32,74 @@ def select_game_file():
 
 def apply_priority(game_exe, enable_priority):
     if enable_priority:
-        # Extracting just the executable name from the full path
-        game_name = os.path.basename(game_exe)
-        # Create registry key for setting high priority
-        subprocess.run(["reg", "add", r"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\%s\PerfOptions" % game_name, "/v", "IoPriority", "/t", "REG_DWORD", "/d", "3", "/f"], shell=True, check=True)
-        subprocess.run(["reg", "add", r"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\%s\PerfOptions" % game_name, "/v", "CpuPriorityClass", "/t", "REG_DWORD", "/d", "3", "/f"], shell=True, check=True)
-        messagebox.showinfo("Success", "High priority added to registry for %s" % game_name)
+        try:
+            game_name = os.path.basename(game_exe)
+            key_path = r"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\%s\PerfOptions" % game_name
+            with winreg.CreateKey(winreg.HKEY_LOCAL_MACHINE, key_path) as key:
+                winreg.SetValueEx(key, "IoPriority", 0, winreg.REG_DWORD, 3)
+                winreg.SetValueEx(key, "CpuPriorityClass", 0, winreg.REG_DWORD, 3)
+            messagebox.showinfo("Success", "High priority added to registry for %s" % game_name)
+        except Exception as e:
+            messagebox.showerror("Error", "Failed to add high priority to registry: %s" % str(e))
     else:
-        if game_exe:  # Check if a game executable is provided
-            # Revert changes by deleting registry key
+        if game_exe:
             try:
                 game_name = os.path.basename(game_exe)
-                subprocess.run(["reg", "delete", r"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\%s\PerfOptions" % game_name, "/v", "IoPriority", "/f"], shell=True, check=True)
-                subprocess.run(["reg", "delete", r"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\%s\PerfOptions" % game_name, "/v", "CpuPriorityClass", "/f"], shell=True, check=True)
+                key_path = r"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\%s\PerfOptions" % game_name
+                winreg.DeleteKey(winreg.HKEY_LOCAL_MACHINE, key_path)
                 messagebox.showinfo("Success", "High priority registry settings reverted for %s" % game_name)
-            except subprocess.CalledProcessError:
-                messagebox.showerror("Error", "Failed to revert registry settings. Registry does not exist.")
+            except Exception as e:
+                messagebox.showerror("Error", "Failed to revert registry settings: %s" % str(e))
 
 def apply_FSE(game_path, enable_FSE):
     if enable_FSE:
-        # Extracting directory and filename from the game path
-        game_dir, game_exe = os.path.split(game_path)
-        # Construct the registry key string with backslashes and without quotation marks
-        registry_key = game_path.replace("/", "\\")
-        # Create registry key for FSE with the full path to the executable
-        subprocess.run(["reg", "add", r"HKCU\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers", "/v", registry_key, "/t", "REG_SZ", "/d", "~ DISABLEDXMAXIMIZEDWINDOWEDMODE HIGHDPIAWARE", "/f"], shell=True, check=True)
-        messagebox.showinfo("Success", "FSE added to registry for %s" % game_exe)
+        if game_path:
+            try:
+                # Replace forward slashes with backslashes in the game path
+                game_path = game_path.replace("/", "\\")
+                # Extracting directory and filename from the game path
+                game_dir, game_exe = os.path.split(game_path)
+                # Open the registry key for writing
+                with winreg.OpenKey(winreg.HKEY_CURRENT_USER, r"SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers", 0, winreg.KEY_ALL_ACCESS) as key:
+                    # Set the registry value for the game executable
+                    winreg.SetValueEx(key, game_path, 0, winreg.REG_SZ, "~ DISABLEDXMAXIMIZEDWINDOWEDMODE HIGHDPIAWARE")
+                messagebox.showinfo("Success", "FSE added to registry for %s" % game_exe)
+            except Exception as e:
+                messagebox.showerror("Error", "Failed to add FSE to registry: %s" % str(e))
     else:
         messagebox.showinfo("Info", "FSE is not enabled.")
 
 def apply_DSCP(game_path, enable_DSCP):
     if enable_DSCP:
-        # Extracting directory and filename from the game path
-        game_dir, game_exe = os.path.split(game_path)
-        game_name, _ = os.path.splitext(os.path.basename(game_exe))  # Extracting just the executable name from the full path
-        
-        # Construct the registry key string with backslashes and without quotation marks
-        registry_key = os.path.join("HKEY_LOCAL_MACHINE", "Software", "Policies", "Microsoft", "Windows", "QoS", game_exe)
+        try:
+            # Extracting directory and filename from the game path
+            game_dir, game_exe = os.path.split(game_path)
+            game_name, _ = os.path.splitext(os.path.basename(game_exe))  # Extracting just the executable name from the full path
 
-        # Create registry keys for DSCP settings
-        subprocess.run(["reg", "add", registry_key, "/v", "Application Name", "/t", "REG_SZ", "/d", game_exe, "/f"], shell=True, check=True)
-        subprocess.run(["reg", "add", registry_key, "/v", "Version", "/t", "REG_SZ", "/d", "1.0", "/f"], shell=True, check=True)
-        subprocess.run(["reg", "add", registry_key, "/v", "Protocol", "/t", "REG_SZ", "/d", "*", "/f"], shell=True, check=True)
-        subprocess.run(["reg", "add", registry_key, "/v", "Local Port", "/t", "REG_SZ", "/d", "*", "/f"], shell=True, check=True)
-        subprocess.run(["reg", "add", registry_key, "/v", "Local IP", "/t", "REG_SZ", "/d", "*", "/f"], shell=True, check=True)
-        subprocess.run(["reg", "add", registry_key, "/v", "Local IP Prefix Length", "/t", "REG_SZ", "/d", "*", "/f"], shell=True, check=True)
-        subprocess.run(["reg", "add", registry_key, "/v", "Remote Port", "/t", "REG_SZ", "/d", "*", "/f"], shell=True, check=True)
-        subprocess.run(["reg", "add", registry_key, "/v", "Remote IP", "/t", "REG_SZ", "/d", "*", "/f"], shell=True, check=True)
-        subprocess.run(["reg", "add", registry_key, "/v", "Remote IP Prefix Length", "/t", "REG_SZ", "/d", "*", "/f"], shell=True, check=True)
-        subprocess.run(["reg", "add", registry_key, "/v", "DSCP Value", "/t", "REG_SZ", "/d", "46", "/f"], shell=True, check=True)
-        subprocess.run(["reg", "add", registry_key, "/v", "Throttle Rate", "/t", "REG_SZ", "/d", "-1", "/f"], shell=True, check=True)
-        
-        # PowerShell command to create a NetQoSPolicy
-        subprocess.run(["powershell", "New-NetQosPolicy", "-Name", game_exe, "-AppPathNameMatchCondition", game_exe, "-Precedence", "127", "-DSCPAction", "46", "-IPProtocol", "Both"], check=True)
+            # Construct the registry key path
+            registry_key_path = r"Software\Policies\Microsoft\Windows\QoS\%s" % game_exe
 
-        messagebox.showinfo("Success", "DSCP settings applied for %s" % game_name)
+            # Open or create the registry key
+            with winreg.CreateKey(winreg.HKEY_LOCAL_MACHINE, registry_key_path) as key:
+                # Set values for DSCP settings
+                winreg.SetValueEx(key, "Application Name", 0, winreg.REG_SZ, game_exe)
+                winreg.SetValueEx(key, "Version", 0, winreg.REG_SZ, "1.0")
+                winreg.SetValueEx(key, "Protocol", 0, winreg.REG_SZ, "*")
+                winreg.SetValueEx(key, "Local Port", 0, winreg.REG_SZ, "*")
+                winreg.SetValueEx(key, "Local IP", 0, winreg.REG_SZ, "*")
+                winreg.SetValueEx(key, "Local IP Prefix Length", 0, winreg.REG_SZ, "*")
+                winreg.SetValueEx(key, "Remote Port", 0, winreg.REG_SZ, "*")
+                winreg.SetValueEx(key, "Remote IP", 0, winreg.REG_SZ, "*")
+                winreg.SetValueEx(key, "Remote IP Prefix Length", 0, winreg.REG_SZ, "*")
+                winreg.SetValueEx(key, "DSCP Value", 0, winreg.REG_SZ, "46")
+                winreg.SetValueEx(key, "Throttle Rate", 0, winreg.REG_SZ, "-1")
+
+            # Execute PowerShell command to create a NetQoSPolicy
+            subprocess.run(["powershell", "New-NetQosPolicy", "-Name", game_exe, "-AppPathNameMatchCondition", game_exe, "-Precedence", "127", "-DSCPAction", "46", "-IPProtocol", "Both"], check=True)
+
+            messagebox.showinfo("Success", "DSCP settings applied for %s" % game_name)
+        except Exception as e:
+            messagebox.showerror("Error", "Failed to apply DSCP settings: %s" % str(e))
     else:
         messagebox.showinfo("Info", "DSCP is not enabled.")
 
@@ -132,33 +146,28 @@ def revert_FSE():
     if not game_path:
         messagebox.showwarning("Warning", "No file selected.")
         return
-    # Extracting directory and filename from the game path
-    game_dir, game_exe = os.path.split(game_path)
-    # Construct the registry key string with backslashes and without quotation marks
-    registry_key = game_path.replace("/", "\\")
-    # Delete the registry key for FSE
-    subprocess.run(["reg", "delete", r"HKCU\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers", "/v", registry_key, "/f"], shell=True, check=True)
-    messagebox.showinfo("Success", "FSE reverted for %s" % game_exe)
+    try:
+        game_dir, game_exe = os.path.split(game_path)
+        registry_key = r"HKCU\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers"
+        with winreg.OpenKey(winreg.HKEY_CURRENT_USER, registry_key, 0, winreg.KEY_ALL_ACCESS) as key:
+            winreg.DeleteValue(key, game_path)
+        messagebox.showinfo("Success", "FSE reverted for %s" % game_exe)
+    except Exception as e:
+        messagebox.showerror("Error", "Failed to revert FSE registry settings: %s" % str(e))
 
 def revert_DSCP(game_path):
     if not game_path:
         messagebox.showwarning("Warning", "No file selected.")
         return
-    # Extracting directory and filename from the game path
-    game_dir, game_exe = os.path.split(game_path)
-    game_name, _ = os.path.splitext(os.path.basename(game_exe))  # Extracting just the executable name from the full path
-    
-    # Construct the registry key string with backslashes and without quotation marks
-    registry_key = os.path.join("HKEY_LOCAL_MACHINE", "Software", "Policies", "Microsoft", "Windows", "QoS", game_exe)
-
-    # Delete the registry key for DSCP settings
     try:
-        subprocess.run(["reg", "delete", registry_key, "/f"], shell=True, check=True)
-        # Remove the NetQoSPolicy
+        game_dir, game_exe = os.path.split(game_path)
+        game_name, _ = os.path.splitext(os.path.basename(game_exe))
+        key_path = r"Software\Policies\Microsoft\Windows\QoS\%s" % game_exe
+        winreg.DeleteKey(winreg.HKEY_LOCAL_MACHINE, key_path)
         subprocess.run(["powershell", "Remove-NetQosPolicy", "-Name", game_exe], check=True)
         messagebox.showinfo("Success", "DSCP settings reverted for %s" % game_name)
-    except subprocess.CalledProcessError:
-        messagebox.showerror("Error", "Failed to revert DSCP settings. Registry does not exist or policy not found.")
+    except Exception as e:
+        messagebox.showerror("Error", "Failed to revert DSCP settings: %s" % str(e))
 
 # Function to revert only DSCP settings
 def revert_DSCP_only():
