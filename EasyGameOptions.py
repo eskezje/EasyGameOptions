@@ -21,17 +21,7 @@ def get_number_of_cores():
     return int(subprocess.check_output(["powershell", "(Get-WmiObject -Class Win32_Processor).NumberOfLogicalProcessors"]).decode().strip())
 
 def convert_dec_to_hex(decimal):
-    if decimal < 0:
-        decimal = 0xffffffff + decimal + 1
-        prefix = 'f'
-    else:
-        prefix = ''
-    hexstr = ''
-    lookup = '0123456789abcdef'
-    while decimal > 0:
-        decimal, remainder = divmod(decimal, 16)
-        hexstr = lookup[remainder] + hexstr
-    return prefix + hexstr.zfill(16)
+    return hex(decimal)
 
 def select_game_file():
     root = Tk()
@@ -106,7 +96,7 @@ def generate_script(game_path, formatted_mask_hex):
     script_content = (
         "@echo off\n"
         "cd /d \"%s\"\n"
-        "start /affinity %s /high \"%s\"\n"  # Enclose the executable path in quotes to handle spaces
+        "start /affinity %s /high %s\n"  # Remove the quotes around %s
     ) % (game_dir, formatted_mask_hex, game_exe)
 
     script_file = os.path.join(os.path.expanduser("~"), "Desktop", "%s_high_affinities.bat" % game_name)
