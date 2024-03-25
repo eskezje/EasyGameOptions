@@ -18,7 +18,7 @@ run_as_admin()
 sub_processes = []
 
 def get_number_of_cores():
-    return int(subprocess.check_output(["powershell", "(Get-WmiObject -Class Win32_Processor).NumberOfLogicalProcessors"]).decode().strip())
+    return os.cpu_count()
 
 def convert_dec_to_hex(decimal):
     return hex(decimal)
