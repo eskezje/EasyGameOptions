@@ -6,6 +6,9 @@ EasyGameOptions is a powerful utility script designed to optimize gaming experie
 
 ## Features
 
+- **Script Generation**: Generate desktop scripts for easy application of optimizations.
+  - *CPU Affinities*: Customize CPU affinities for enhanced performance.
+  - *High Priority in Script*: Include high priority settings directly within the generated script.
 - **High Priority Registry Setting**: Elevate priority levels for specified game executables in the Windows Registry.
 - **Full-Screen Exclusive (FSE) Support**: Enable Full-Screen Exclusive mode for immersive gaming experiences.
 - **DSCP Settings Configuration**: Configure Differentiated Services Code Point settings to ensure superior Quality of Service (QoS).
@@ -22,7 +25,10 @@ EasyGameOptions is a powerful utility script designed to optimize gaming experie
 1. **Run as Administrator**: Execute the script with administrative privileges to apply system changes.
 2. **Select Game Executable**: Click the "Explore" button to navigate and select the game executable file.
 3. **Customize Options**:
-   - **High Priority**: Check the box to elevate priority levels for optimized performance.
+   - **Script Generation**: Choose options for CPU affinities and high priority settings directly within the generated script.
+     - *CPU Affinities*: Customize CPU affinities for enhanced performance.
+     - *High Priority in Script*: Include high priority settings directly within the generated script.
+   - **High Priority in registry**: Check the box to elevate priority levels for optimized performance.
    - **FSE**: Enable Full-Screen Exclusive mode for an immersive gaming experience.
    - **DSCP**: Configure Differentiated Services Code Point settings for enhanced Quality of Service.
 4. **Apply Changes**: Click the "Explore" button to apply selected optimizations.
