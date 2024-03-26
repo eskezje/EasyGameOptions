@@ -2,7 +2,7 @@
 
 EasyGameOptions is a utility script designed to streamline the optimization process for gaming on Windows systems. It allows users to easily apply various performance tweaks such as setting CPU affinity, enabling Full-Screen Exclusive (FSE), and configuring Differentiated Services Code Point (DSCP) settings. Additionally, it provides the option to revert these changes if needed.
 
-![image](https://github.com/eskezje/EasyGameOptions/assets/114604325/0391f623-7f3c-42d9-87b0-fecf663e7765)
+![image](https://github.com/eskezje/EasyGameOptions/assets/114604325/d7cb196f-171a-46c1-952b-2e0fe2f661ba)
 
 ### Features
 
