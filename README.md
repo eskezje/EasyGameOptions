@@ -1,7 +1,3 @@
-Certainly! Here's the revised version of the README.md file, taking into account that the script is named EasyGameOptions.py:
-
----
-
 # EasyGameOptions
 
 EasyGameOptions is a powerful utility script designed to optimize gaming experiences on Windows systems. This script simplifies the process of fine-tuning system settings, including CPU affinity, Full-Screen Exclusive (FSE) mode, and Differentiated Services Code Point (DSCP) configurations. With EasyGameOptions, users can effortlessly enhance gaming performance while enjoying the flexibility to revert changes when necessary.
