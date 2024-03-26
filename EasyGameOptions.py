@@ -157,9 +157,13 @@ def revert_FSE():
         messagebox.showwarning("Warning", "No file selected.")
         return
     try:
+        # Replace forward slashes with backslashes in the game path
+        game_path = game_path.replace("/", "\\")
+        # Extracting directory and filename from the game path
         game_dir, game_exe = os.path.split(game_path)
-        registry_key = r"HKCU\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers"
-        with winreg.OpenKey(winreg.HKEY_CURRENT_USER, registry_key, 0, winreg.KEY_ALL_ACCESS) as key:
+        # Open the registry key for writing
+        with winreg.OpenKey(winreg.HKEY_CURRENT_USER, r"SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers", 0, winreg.KEY_ALL_ACCESS) as key:
+            # Delete the registry value for the game executable
             winreg.DeleteValue(key, game_path)
         messagebox.showinfo("Success", "FSE reverted for %s" % game_exe)
     except Exception as e:
