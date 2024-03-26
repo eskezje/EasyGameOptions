@@ -66,8 +66,6 @@ def apply_FSE(game_path, enable_FSE):
                 messagebox.showinfo("Success", "FSE added to registry for %s" % game_exe)
             except Exception as e:
                 messagebox.showerror("Error", "Failed to add FSE to registry: %s" % str(e))
-    else:
-        messagebox.showinfo("Info", "FSE is not enabled.")
 
 def apply_DSCP(game_path, enable_DSCP):
     if enable_DSCP:
@@ -100,8 +98,6 @@ def apply_DSCP(game_path, enable_DSCP):
             messagebox.showinfo("Success", "DSCP settings applied for %s" % game_name)
         except Exception as e:
             messagebox.showerror("Error", "Failed to apply DSCP settings: %s" % str(e))
-    else:
-        messagebox.showinfo("Info", "DSCP is not enabled.")
 
 def generate_script(game_path, formatted_mask_hex, enable_high_priority, enable_affinities):
     game_dir, game_exe = os.path.split(game_path)
