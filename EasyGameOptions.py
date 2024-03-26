@@ -100,6 +100,10 @@ def apply_DSCP(game_path, enable_DSCP):
             messagebox.showerror("Error", "Failed to apply DSCP settings: %s" % str(e))
 
 def generate_script(game_path, formatted_mask_hex, enable_high_priority, enable_affinities):
+    if not (enable_high_priority or enable_affinities):
+        messagebox.showwarning("Warning", "Either /high priority or /affinities option must be enabled to generate the desktop script, other settings has been applied.")
+        return
+    
     game_dir, game_exe = os.path.split(game_path)
     game_name, _ = os.path.splitext(os.path.basename(game_exe))  # Extracting just the executable name from the full path
 
