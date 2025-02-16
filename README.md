@@ -1,5 +1,7 @@
 # EasyGameOptions
 
+[![Downloads](https://img.shields.io/github/downloads/eskezje/EasyGameOptions/total.svg)](https://github.com/eskezje/EasyGameOptions/releases)
+
 EasyGameOptions is a powerful utility script designed to optimize gaming experiences on Windows systems. This script simplifies the process of fine-tuning system settings, including CPU affinity, Full-Screen Exclusive (FSE) mode, and Differentiated Services Code Point (DSCP) configurations. With EasyGameOptions, users can effortlessly enhance gaming performance while enjoying the flexibility to revert changes when necessary.
 
 ![EasyGameOptions](https://github.com/eskezje/EasyGameOptions/assets/114604325/d7cb196f-171a-46c1-952b-2e0fe2f661ba)
